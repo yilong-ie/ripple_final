@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VineLedger — XRPL Issuance Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./vineledger.css?v=1">
+<link rel="stylesheet" href="./vineledger-anim.css?v=2">
+</head>
+<body>
+  <div class="paper-grain" aria-hidden="true"></div>
+
+  <!-- ==================== TOP BAR ==================== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="mark">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M24 8 L24 40 M12 14 L36 34 M12 34 L36 14 M8 24 L40 24" stroke="currentColor" stroke-width="0.6" fill="none"/>
+          <circle cx="24" cy="24" r="7" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="mark-copy">
+        <span class="eyebrow">XRPL Issuance Desk · Testnet</span>
+        <strong>VineLedger<span class="reg">®</span></strong>
+      </div>
+    </div>
+
+    <nav class="topnav">
+      <button class="nav-item is-active">Desk</button>
+      <button class="nav-item">Policy</button>
+      <button class="nav-item">Book</button>
+      <button class="nav-item">Cashflow</button>
+      <button class="nav-item">Ledger</button>
+    </nav>
+
+    <div class="topbar-right">
+      <div class="status-dot">
+        <span class="dot" id="netDot"></span>
+        <span class="status-label">
+          <span class="status-top">XRPL Testnet</span>
+          <span class="status-bot" id="netStatus">Connected · ledger <b id="ledgerNum">97,421,118</b></span>
+        </span>
+      </div>
+      <button class="iconbtn" title="Notifications">
+        <svg viewBox="0 0 20 20"><path d="M10 2v1M6 4l-2 2M14 4l2 2M4 11a6 6 0 0 1 12 0v3l1 2H3l1-2z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span class="ping"></span>
+      </button>
+      <div class="user-chip">
+        <span class="avatar">MR</span>
+        <span class="user-meta">
+          <b>M. Ravel</b>
+          <small>Issuer admin</small>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+
+    <!-- ==================== DEAL HEADER / FOLIO ==================== -->
+    <section class="folio">
+      <div class="folio-rule"><span>DEAL FOLIO No. <b id="folioNum">VL-2027-001</b></span><span>ISSUED <b>APR. 19, 2026</b></span><span>STATUS <b id="folioStatus">Bookbuilding</b></span></div>
+
+      <div class="folio-body">
+        <div class="folio-art" aria-hidden="true">
+          <svg viewBox="0 0 140 200" preserveAspectRatio="xMidYMid meet" class="bottle-svg">
+            <defs>
+              <!-- deep glass gradient -->
+              <linearGradient id="glassG" x1="0" x2="1">
+                <stop offset="0" stop-color="#2a0810"/>
+                <stop offset="0.35" stop-color="#5b1a24"/>
+                <stop offset="0.65" stop-color="#3a0d14"/>
+                <stop offset="1" stop-color="#180408"/>
+              </linearGradient>
+              <!-- wine liquid -->
+              <linearGradient id="wineG" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#7a1e2c"/>
+                <stop offset="1" stop-color="#3a0b14"/>
+              </linearGradient>
+              <!-- foil capsule -->
+              <linearGradient id="foilG" x1="0" x2="1">
+                <stop offset="0" stop-color="#7a2a18"/>
+                <stop offset="0.5" stop-color="#a74628"/>
+                <stop offset="1" stop-color="#5a1d10"/>
+              </linearGradient>
+              <!-- label paper -->
+              <linearGradient id="labelG" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#fbf2dc"/>
+                <stop offset="1" stop-color="#eadcb8"/>
+              </linearGradient>
+              <!-- shine sweep -->
+              <linearGradient id="shineG" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0" stop-color="rgba(255,240,210,0)"/>
+                <stop offset="0.5" stop-color="rgba(255,240,210,0.55)"/>
+                <stop offset="1" stop-color="rgba(255,240,210,0)"/>
+              </linearGradient>
+
+              <!-- bottle silhouette mask: wine only fills the interior -->
+              <clipPath id="bottleInside">
+                <path d="M60 24 L80 24 L80 52 Q92 62 92 82 L92 178 Q92 184 86 184 L54 184 Q48 184 48 178 L48 82 Q48 62 60 52 Z"/>
+              </clipPath>
+
+              <!-- pouring path for single drop -->
+              <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="0.6"/>
+              </filter>
+            </defs>
+
+            <!-- soft shadow on table -->
+            <ellipse cx="70" cy="192" rx="34" ry="3.5" fill="rgba(42,11,16,0.35)" class="bottle-shadow"/>
+
+            <!-- glass body -->
+            <path class="bottle-body"
+                  d="M60 24 L80 24 L80 52 Q92 62 92 82 L92 178 Q92 184 86 184 L54 184 Q48 184 48 178 L48 82 Q48 62 60 52 Z"
+                  fill="url(#glassG)"/>
+
+            <!-- wine fill inside bottle (clipped) -->
+            <g clip-path="url(#bottleInside)">
+              <rect class="wine-fill" x="46" y="60" width="48" height="130" fill="url(#wineG)"/>
+              <!-- meniscus waves (top of wine) -->
+              <path class="wine-wave" d="M46 60 Q58 56 70 60 T94 60 L94 64 L46 64 Z" fill="#8a2434" opacity="0.85"/>
+              <path class="wine-wave wine-wave-2" d="M46 60 Q58 64 70 60 T94 60 L94 64 L46 64 Z" fill="#6a1a26" opacity="0.6"/>
+            </g>
+
+            <!-- foil / capsule over neck -->
+            <path class="bottle-foil"
+                  d="M58 24 L82 24 L82 54 Q82 56 80 56 L60 56 Q58 56 58 54 Z"
+                  fill="url(#foilG)"/>
+            <!-- foil ridge -->
+            <rect x="58" y="50" width="24" height="0.8" fill="rgba(0,0,0,0.35)"/>
+            <!-- cork top -->
+            <rect class="bottle-cork" x="60" y="20" width="20" height="6" rx="1" fill="#b8844a"/>
+            <rect class="bottle-cork-cap" x="58" y="18" width="24" height="4" rx="1" fill="#8f6330"/>
+
+            <!-- label -->
+            <g class="bottle-label">
+              <rect x="50" y="104" width="40" height="62" fill="url(#labelG)" stroke="#2a0b10" stroke-width="0.6"/>
+              <!-- embossed border -->
+              <rect x="52" y="106" width="36" height="58" fill="none" stroke="#4d1620" stroke-width="0.25" opacity="0.6"/>
+              <!-- crest -->
+              <circle cx="70" cy="116" r="3.2" fill="none" stroke="#4d1620" stroke-width="0.4"/>
+              <path d="M70 113.5 L70 118.5 M67.5 116 L72.5 116" stroke="#4d1620" stroke-width="0.4"/>
+              <text x="70" y="128" text-anchor="middle" font-family="Fraunces, serif" font-size="6.5" font-style="italic" fill="#4d1620" class="label-region">Rioja</text>
+              <text x="70" y="140" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="8.5" fill="#2a0b10" letter-spacing="0.4" class="label-name">RESERVE</text>
+              <line x1="58" y1="144" x2="82" y2="144" stroke="#4d1620" stroke-width="0.3"/>
+              <text x="70" y="152" text-anchor="middle" font-family="Fraunces, serif" font-size="5" fill="#4d1620" class="label-year">MMXXVII</text>
+              <text x="70" y="160" text-anchor="middle" font-family="JetBrains Mono, mono" font-size="3.2" fill="#7a3b2a" letter-spacing="0.4" class="label-code">VL · 001</text>
+            </g>
+
+            <!-- long vertical glass highlight -->
+            <path class="bottle-hl" d="M55 68 Q51 110 55 170"
+                  stroke="rgba(255,235,210,0.22)" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+            <!-- short secondary highlight -->
+            <path class="bottle-hl bottle-hl-2" d="M86 80 Q88 120 86 160"
+                  stroke="rgba(255,235,210,0.1)" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+            <!-- sweeping shine (animated) -->
+            <g clip-path="url(#bottleInside)">
+              <rect class="shine-sweep" x="-40" y="20" width="28" height="170" fill="url(#shineG)" transform="skewX(-14)"/>
+            </g>
+
+            <!-- rising sediment bubbles inside wine -->
+            <g clip-path="url(#bottleInside)" class="bubbles">
+              <circle class="b b1" cx="62" cy="170" r="0.9" fill="rgba(255,220,180,0.55)"/>
+              <circle class="b b2" cx="76" cy="178" r="0.7" fill="rgba(255,220,180,0.5)"/>
+              <circle class="b b3" cx="70" cy="165" r="0.5" fill="rgba(255,220,180,0.6)"/>
+              <circle class="b b4" cx="58" cy="175" r="0.6" fill="rgba(255,220,180,0.45)"/>
+              <circle class="b b5" cx="82" cy="168" r="0.5" fill="rgba(255,220,180,0.5)"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="folio-main">
+          <span class="scenario-pill" id="scenarioPill"><span class="pip"></span>Rioja Reserve — <em>Live Preview</em></span>
+          <h1 class="folio-title" id="dealTitle">VineLedger <span class="amp">Series</span> A1</h1>
+          <p class="folio-sub" id="dealSub">Rioja Family Estate · Rioja Reserve 2027 SPV</p>
+
+          <div class="folio-specs">
+            <div><span class="k">Issuer</span><b id="sIssuer">Rioja Family Estate</b></div>
+            <div><span class="k">SPV Vehicle</span><b id="sSpv">Rioja Reserve 2027</b></div>
+            <div><span class="k">Vintage</span><b id="sVintage">2027 Reserve</b></div>
+            <div><span class="k">Jurisdiction</span><b id="sJuris">La Rioja · ES</b></div>
+            <div><span class="k">Lead Investor</span><b id="sInv">Atlas Family Office</b></div>
+            <div><span class="k">Lockup</span><b id="sLock">180 days</b></div>
+          </div>
+        </div>
+
+        <div class="folio-aside">
+          <div class="big-num">
+            <span class="k">Target Raise</span>
+            <b class="n"><span class="n-num" id="targetNum">20.00</span><span class="n-unit">XRP</span></b>
+            <small><span id="commitPct">75</span>% placed · <span id="gap">5.00</span> XRP to close</small>
+          </div>
+          <div class="progress-arc" aria-hidden="true">
+            <svg viewBox="0 0 120 70">
+              <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="rgba(77,22,32,0.12)" stroke-width="6"/>
+              <path id="arcFill" d="M10 60 A50 50 0 0 1 85 21" fill="none" stroke="#4d1620" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="85" cy="21" r="3" fill="#b3853e"/>
+            </svg>
+            <div class="arc-labels"><span>0</span><span>25</span><span>50</span><span>75</span><span>100%</span></div>
+          </div>
+          <div class="aside-actions">
+            <button class="btn btn-solid" id="autoRunBtn">
+              <svg viewBox="0 0 16 16"><path d="M4 3 L13 8 L4 13 Z" fill="currentColor"/></svg>
+              Auto-run happy path
+            </button>
+            <button class="btn btn-ghost" id="launchBtn">Launch fresh deal</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== METRICS TICKER ==================== -->
+    <section class="ticker">
+      <div class="ticker-row" id="tickerRow">
+        <!-- filled by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== MAIN COLUMNS ==================== -->
+    <div class="columns">
+
+      <!-- ============ LEFT: ISSUANCE DESK ============ -->
+      <section class="col-left">
+
+        <!-- Scenario Deck -->
+        <div class="card">
+          <header class="card-head">
+            <span class="card-kicker">§ 01</span>
+            <h2 class="card-title">Scenario <em>Selector</em></h2>
+            <div class="card-actions">
+              <span class="selected-tag">Active · <b id="activeScenario">Rioja Reserve</b></span>
+            </div>
+          </header>
+
+          <div class="scenario-grid" id="scenarioGrid"><!-- JS --></div>
+        </div>
+
+        <!-- Lifecycle Rail -->
+        <div class="card">
+          <header class="card-head">
+            <span class="card-kicker">§ 02</span>
+            <h2 class="card-title">Lifecycle <em>Progress</em></h2>
+            <div class="card-actions">
+              <span class="meta-chip">6 of 8 complete</span>
+            </div>
+          </header>
+
+          <ol class="lifeline" id="lifeline"><!-- JS --></ol>
+        </div>
+
+        <!-- Action Panel -->
+        <div class="card card-console">
+          <header class="card-head">
+            <span class="card-kicker">§ 03</span>
+            <h2 class="card-title">Issuance <em>Console</em></h2>
+            <div class="card-actions">
+              <span class="terminal-dot"></span><span class="terminal-dot amber"></span><span class="terminal-dot green"></span>
+            </div>
+          </header>
+
+          <div class="console-row">
+            <button class="seq-btn" data-k="trustline"><span class="seq-n">01</span><span class="seq-l">Trust Line</span></button>
+            <button class="seq-btn" data-k="authorize"><span class="seq-n">02</span><span class="seq-l">Allow-list</span></button>
+            <button class="seq-btn" data-k="subscribe"><span class="seq-n">03</span><span class="seq-l">Subscription</span></button>
+            <button class="seq-btn" data-k="issue"><span class="seq-n">04</span><span class="seq-l">Issue Token</span></button>
+            <button class="seq-btn" data-k="payout"><span class="seq-n">05</span><span class="seq-l">Payout</span></button>
+            <button class="seq-btn seq-danger" data-k="freeze"><span class="seq-n">06</span><span class="seq-l">Freeze Hold</span></button>
+            <button class="seq-btn seq-safe" data-k="release"><span class="seq-n">07</span><span class="seq-l">Release</span></button>
+          </div>
+
+          <div class="console-msg" id="consoleMsg">
+            <span class="msg-prompt">vineledger $</span>
+            <span class="msg-text">Ready. Pick a scenario card, or launch fresh XRPL flow.</span>
+            <span class="msg-caret"></span>
+          </div>
+        </div>
+
+        <!-- Config Form -->
+        <div class="card">
+          <header class="card-head">
+            <span class="card-kicker">§ 04</span>
+            <h2 class="card-title">Deal <em>Parameters</em></h2>
+            <div class="card-actions">
+              <button class="text-btn">Reset to preset</button>
+            </div>
+          </header>
+
+          <form class="param-grid" id="paramForm" autocomplete="off">
+            <label class="f-span-2"><span>Project name</span><input value="VineLedger Series A1"></label>
+            <label><span>Currency</span><input value="VIN" maxlength="3"></label>
+            <label><span>Target raise (XRP)</span><input value="20"></label>
+
+            <label class="f-span-2"><span>Issuer name</span><input value="Rioja Family Estate"></label>
+            <label class="f-span-2"><span>SPV vehicle</span><input value="Rioja Reserve 2027 SPV"></label>
+
+            <label class="f-span-2"><span>Region</span><input value="La Rioja, Spain"></label>
+            <label class="f-span-2"><span>Vintage / product</span><input value="2027 Reserve"></label>
+
+            <label class="f-span-2"><span>Investor name</span><input value="Atlas Family Office"></label>
+            <label>
+              <span>Investor type</span>
+              <select><option>Professional Investor</option><option>Family Office</option><option>Asset Manager</option><option>Corporate Treasury</option></select>
+            </label>
+            <label><span>Jurisdiction</span><input value="France"></label>
+
+            <label><span>Revenue share %</span><input value="12"></label>
+            <label><span>Lockup (days)</span><input value="180"></label>
+            <label><span>Trust limit</span><input value="1,000,000"></label>
+            <label><span>Issue quantity</span><input value="1,000"></label>
+
+            <label><span>Subscription (XRP)</span><input value="15"></label>
+            <label><span>Payout (XRP)</span><input value="1.5"></label>
+          </form>
+        </div>
+
+      </section>
+
+      <!-- ============ RIGHT: SIDE DOSSIER ============ -->
+      <aside class="col-right">
+
+        <!-- Deal Snapshot / Prospectus card -->
+        <div class="card dossier">
+          <div class="dossier-watermark">VL</div>
+          <header class="card-head">
+            <span class="card-kicker">Prospectus</span>
+            <h2 class="card-title">Deal <em>Snapshot</em></h2>
+          </header>
+
+          <div class="dossier-chips">
+            <span class="chip chip-live">Live on XRPL</span>
+            <span class="chip chip-neutral">Bookbuilding</span>
+            <span class="chip chip-ok">No hold</span>
+          </div>
+
+          <dl class="dossier-grid">
+            <div><dt>Vintage</dt><dd>2027 Reserve</dd></div>
+            <div><dt>Jurisdiction</dt><dd>France</dd></div>
+            <div><dt>Revenue share</dt><dd>12.00%</dd></div>
+            <div><dt>Lockup</dt><dd>180 days</dd></div>
+            <div><dt>Trust limit</dt><dd>1,000,000 VIN</dd></div>
+            <div><dt>Subscription</dt><dd>15.00 XRP</dd></div>
+            <div><dt>Issue</dt><dd>1,000 VIN</dd></div>
+            <div><dt>Payout</dt><dd>1.50 XRP</dd></div>
+          </dl>
+
+          <div class="dossier-stamp">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="54" fill="none" stroke="#4d1620" stroke-width="1.4"/>
+              <circle cx="60" cy="60" r="44" fill="none" stroke="#4d1620" stroke-width="0.6"/>
+              <defs>
+                <path id="stampPath" d="M 60 60 m -40 0 a 40 40 0 1 1 80 0 a 40 40 0 1 1 -80 0" fill="none"/>
+              </defs>
+              <g class="stamp-ring">
+                <text font-family="Fraunces, serif" font-size="9" font-weight="600" fill="#4d1620" letter-spacing="2">
+                  <textPath href="#stampPath" startOffset="0">VINELEDGER · VERIFIED · XRPL TESTNET · 2026 · </textPath>
+                </text>
+              </g>
+              <text x="60" y="56" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="14" fill="#4d1620">VL</text>
+              <text x="60" y="70" text-anchor="middle" font-family="JetBrains Mono, mono" font-size="6" fill="#4d1620">001/2027</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Accounts panel -->
+        <div class="card">
+          <header class="card-head">
+            <span class="card-kicker">§ 05</span>
+            <h2 class="card-title">XRPL <em>Wallets</em></h2>
+            <div class="card-actions"><span class="meta-chip">3 live</span></div>
+          </header>
+
+          <div class="wallet-list" id="walletList"><!-- JS --></div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ==================== POLICY + CASHFLOW ==================== -->
+    <section class="dual-row">
+      <div class="card">
+        <header class="card-head">
+          <span class="card-kicker">§ 06</span>
+          <h2 class="card-title">Policy <em>Gateway</em></h2>
+          <div class="card-actions"><span class="meta-chip ok">All checks green</span></div>
+        </header>
+
+        <div class="policy-hero">
+          <div class="policy-score">
+            <span class="policy-k">Gateway score</span>
+            <b>100<small>/100</small></b>
+            <span class="policy-rule">Transfers: approved wallets only · 180-day lockup · Pro. investor</span>
+          </div>
+          <div class="policy-gauge">
+            <svg viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="48" fill="none" stroke="rgba(77,22,32,0.1)" stroke-width="8"/>
+              <circle cx="60" cy="60" r="48" fill="none" stroke="#496142" stroke-width="8" stroke-dasharray="301.6" stroke-dashoffset="0" transform="rotate(-90 60 60)" stroke-linecap="round"/>
+            </svg>
+            <span class="gauge-mid">✓</span>
+          </div>
+        </div>
+
+        <div class="policy-grid" id="policyGrid"><!-- JS --></div>
+
+        <div class="alert-strip">
+          <span class="alert-k">Alert playbook · on standby</span>
+          <div class="alert-rules">
+            <div class="alert-rule"><b>Transfer during lockup</b><small>Approved wallet moves tokens before lockup expiry.</small></div>
+            <div class="alert-rule"><b>Settlement wallet mismatch</b><small>Payout routes to a wallet not on servicing record.</small></div>
+            <div class="alert-rule"><b>Sanctions refresh hit</b><small>Periodic rescreening returns a new match.</small></div>
+            <div class="alert-rule"><b>Off-platform transfer</b><small>Holder asks to route tokens to an unvetted wallet.</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <header class="card-head">
+          <span class="card-kicker">§ 07</span>
+          <h2 class="card-title">Cashflow <em>Story</em></h2>
+          <div class="card-actions"><span class="meta-chip">Current cycle</span></div>
+        </header>
+
+        <ol class="flow-chain" id="flowChain"><!-- JS --></ol>
+      </div>
+    </section>
+
+    <!-- ==================== PLACEMENT BOOK ==================== -->
+    <section class="card book">
+      <header class="card-head">
+        <span class="card-kicker">§ 08</span>
+        <h2 class="card-title">Placement <em>Book</em> &amp; Cap Table</h2>
+        <div class="card-actions">
+          <div class="tabs" id="bookTabs">
+            <button class="tab is-active" data-tab="book">Placement book</button>
+            <button class="tab" data-tab="cap">Cap table</button>
+          </div>
+        </div>
+      </header>
+
+      <div class="book-summary">
+        <div><span class="k">Book entries</span><b>2</b></div>
+        <div class="sep"></div>
+        <div><span class="k">Approved</span><b class="ok">1</b></div>
+        <div class="sep"></div>
+        <div><span class="k">Restricted</span><b>0</b></div>
+        <div class="sep"></div>
+        <div><span class="k">Committed</span><b>15.00 <small>XRP</small></b></div>
+        <div class="sep"></div>
+        <div><span class="k">Allocated</span><b>1,000 <small>VIN</small></b></div>
+      </div>
+
+      <!-- Placement tab -->
+      <div class="tab-panel is-active" data-tab="book">
+        <table class="ledger-table">
+          <colgroup>
+            <col style="width:28%"><col style="width:18%"><col style="width:18%"><col style="width:12%"><col style="width:12%"><col style="width:12%">
+          </colgroup>
+          <thead>
+            <tr><th>Investor</th><th>Wallet</th><th>Onboarding</th><th>Allocation</th><th>Committed</th><th>Payout</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="inv-name">
+                  <span class="inv-avatar" style="background:linear-gradient(135deg,#8c4126,#4d1620)">AF</span>
+                  <div>
+                    <b>Atlas Family Office</b>
+                    <small>Professional Investor · France</small>
+                  </div>
+                </div>
+              </td>
+              <td><code>rG7Hf…9kPzNa</code></td>
+              <td><span class="pill pill-ok">Approved</span> <span class="pill pill-neutral">Clear</span></td>
+              <td>1,000 VIN</td>
+              <td>15.00 XRP</td>
+              <td>1.50 XRP</td>
+            </tr>
+            <tr class="muted">
+              <td>
+                <div class="inv-name">
+                  <span class="inv-avatar" style="background:#d9cdb9; color:#6e635d">—</span>
+                  <div>
+                    <b>Follow-on Allocation Waitlist</b>
+                    <small>Pipeline account · Multi-jurisdiction</small>
+                  </div>
+                </div>
+              </td>
+              <td><span class="muted">Awaiting onboarding</span></td>
+              <td><span class="pill pill-pending">Pipeline</span></td>
+              <td>0 VIN</td>
+              <td>0.00 XRP</td>
+              <td>0.00 XRP</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Cap table tab -->
+      <div class="tab-panel" data-tab="cap">
+        <div class="cap-bar" aria-hidden="true">
+          <div class="cap-seg" style="width:100%;background:#4d1620" title="Atlas Family Office — 100%"></div>
+        </div>
+        <table class="ledger-table">
+          <colgroup><col style="width:32%"><col style="width:14%"><col style="width:14%"><col style="width:14%"><col style="width:13%"><col style="width:13%"></colgroup>
+          <thead>
+            <tr><th>Holder</th><th>Class</th><th>Status</th><th>Tokens</th><th>Ownership</th><th>Payout</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>Atlas Family Office</b><small class="sub">Revenue Participation Tokens</small></td>
+              <td>RPT</td>
+              <td><span class="pill pill-ok">Issued</span></td>
+              <td>1,000</td>
+              <td>100.0%</td>
+              <td>1.50 XRP</td>
+            </tr>
+            <tr class="muted">
+              <td><b>Unallocated Capacity</b><small class="sub">Remaining issuance capacity</small></td>
+              <td>RPT</td>
+              <td><span class="pill pill-pending">Open</span></td>
+              <td>0</td>
+              <td>0.0%</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr><td><b>Total supply</b></td><td colspan="2">1,000 VIN</td><td colspan="3">issued · 100% placed</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- ==================== TRUST LINE + TIMELINE ==================== -->
+    <section class="dual-row">
+      <div class="card">
+        <header class="card-head">
+          <span class="card-kicker">§ 09</span>
+          <h2 class="card-title">Trust <em>Line</em></h2>
+          <div class="card-actions">
+            <span class="pill pill-ok">Allow-listed</span>
+            <span class="pill pill-neutral">Transferable</span>
+          </div>
+        </header>
+
+        <div class="trust-card">
+          <div class="trust-head">
+            <div class="trust-currency">
+              <span class="k">Token</span>
+              <b>VIN</b>
+            </div>
+            <div class="trust-flow">
+              <div class="node"><span>Issuer</span><code>rP4Ty…a9QxEm</code></div>
+              <div class="line"><span class="line-arr">◂ trust ▸</span></div>
+              <div class="node"><span>Investor</span><code>rG7Hf…9kPzNa</code></div>
+            </div>
+          </div>
+          <dl class="trust-grid">
+            <div><dt>Currency</dt><dd>VIN</dd></div>
+            <div><dt>Balance</dt><dd>1,000</dd></div>
+            <div><dt>Limit</dt><dd>1,000,000</dd></div>
+            <div><dt>Authorized</dt><dd class="ok">Yes</dd></div>
+            <div><dt>Frozen</dt><dd>No</dd></div>
+            <div><dt>No Ripple</dt><dd>Yes</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card">
+        <header class="card-head">
+          <span class="card-kicker">§ 10</span>
+          <h2 class="card-title">Ledger <em>Timeline</em></h2>
+          <div class="card-actions"><span class="meta-chip">10 events</span></div>
+        </header>
+
+        <ol class="timeline" id="timeline"><!-- JS --></ol>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="foot-rule"></div>
+      <div class="foot-row">
+        <span>VineLedger · Issuance Desk</span>
+        <span>Testnet demo · not financial advice</span>
+        <span>MMXXVI · <i>in vino veritas</i></span>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ==================== TWEAKS PANEL (hidden by default) ==================== -->
+  <aside id="tweaks" class="tweaks" hidden>
+    <header><b>Tweaks</b><button id="tweaksClose" aria-label="Close">×</button></header>
+    <label><span>Accent</span>
+      <div class="swatches" id="swAccent">
+        <button data-v="#4d1620" style="background:#4d1620" class="is-active"></button>
+        <button data-v="#2a3a2a" style="background:#2a3a2a"></button>
+        <button data-v="#1e3a5c" style="background:#1e3a5c"></button>
+        <button data-v="#3a1a1e" style="background:#3a1a1e"></button>
+        <button data-v="#111111" style="background:#111111"></button>
+      </div>
+    </label>
+    <label><span>Gold</span>
+      <div class="swatches" id="swGold">
+        <button data-v="#b3853e" style="background:#b3853e" class="is-active"></button>
+        <button data-v="#a67c2f" style="background:#a67c2f"></button>
+        <button data-v="#c59a4a" style="background:#c59a4a"></button>
+        <button data-v="#8a6a2e" style="background:#8a6a2e"></button>
+      </div>
+    </label>
+    <label><span>Paper</span>
+      <div class="swatches" id="swPaper">
+        <button data-v="cream" class="is-active" style="background:#f4ead6"></button>
+        <button data-v="linen" style="background:#ece0cf"></button>
+        <button data-v="ivory" style="background:#faf4e6"></button>
+        <button data-v="parchment" style="background:#ead9be"></button>
+      </div>
+    </label>
+    <label><span>Density</span>
+      <div class="seg" id="segDensity">
+        <button data-v="cozy">Cozy</button>
+        <button data-v="regular" class="is-active">Regular</button>
+        <button data-v="compact">Compact</button>
+      </div>
+    </label>
+    <label><span>Show grain</span>
+      <div class="seg" id="segGrain">
+        <button data-v="on" class="is-active">On</button>
+        <button data-v="off">Off</button>
+      </div>
+    </label>
+  </aside>
+
+  <!-- tweak defaults -->
+  <script>
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "accent": "#4d1620",
+      "gold": "#b3853e",
+      "paper": "cream",
+      "density": "regular",
+      "grain": "on"
+    }/*EDITMODE-END*/;
+  </script>
+  <script src="./vineledger.js?v=1"></script>
+</body>
+</html>
