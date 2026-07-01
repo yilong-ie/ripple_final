@@ -1,0 +1,13 @@
+{
+  "name": "vineledger-demo",
+  "private": true,
+  "scripts": {
+    "demo": "node demo/server.js"
+  },
+  "dependencies": {
+    "xrpl": "^4.6.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.59.1"
+  }
+}
